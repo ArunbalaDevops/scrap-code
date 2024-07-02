@@ -1,0 +1,24 @@
+Test Event Name
+lamda-test
+
+Response
+{
+  "errorMessage": "string indices must be integers, not 'str'",
+  "errorType": "TypeError",
+  "requestId": "964e0cd8-56b2-422a-bd79-036156deb5a7",
+  "stackTrace": [
+    "  File \"/var/task/lambda_function.py\", line 152, in lambda_handler\n    ec2_data.extend(fetch_ec2_backups(ec2_client))\n",
+    "  File \"/var/task/lambda_function.py\", line 29, in fetch_ec2_backups\n    for instance in reservation['Instances']:\n"
+  ]
+}
+
+Function Logs
+dev/xvda', 'Ebs': {'AttachTime': datetime.datetime(2024, 2, 29, 15, 37, 47, tzinfo=tzlocal()), 'DeleteOnTermination': True, 'Status': 'attached', 'VolumeId': 'vol-02a00ab5dfb0c5d23'}}], 'ClientToken': '2c4d0e00-14f9-4110-9f81-4c7b29d1c392', 'EbsOptimized': True, 'EnaSupport': True, 'Hypervisor': 'xen', 'NetworkInterfaces': [{'Attachment': {'AttachTime': datetime.datetime(2024, 2, 29, 15, 37, 46, tzinfo=tzlocal()), 'AttachmentId': 'eni-attach-0102d3fd24dbac891', 'DeleteOnTermination': True, 'DeviceIndex': 0, 'Status': 'attached', 'NetworkCardIndex': 0}, 'Description': '', 'Groups': [{'GroupName': 'Test_Windows_SG', 'GroupId': 'sg-0e1a743c933c64c0c'}], 'Ipv6Addresses': [], 'MacAddress': '0e:2f:0c:20:43:5d', 'NetworkInterfaceId': 'eni-0928f5927833d8294', 'OwnerId': '671998034551', 'PrivateDnsName': 'ip-10-209-184-8.ec2.internal', 'PrivateIpAddress': '10.209.184.8', 'PrivateIpAddresses': [{'Primary': True, 'PrivateDnsName': 'ip-10-209-184-8.ec2.internal', 'PrivateIpAddress': '10.209.184.8'}], 'SourceDestCheck': True, 'Status': 'in-use', 'SubnetId': 'subnet-07cab086092196b40', 'VpcId': 'vpc-088456184d9f8d125', 'InterfaceType': 'interface'}], 'RootDeviceName': '/dev/xvda', 'RootDeviceType': 'ebs', 'SecurityGroups': [{'GroupName': 'Test_Windows_SG', 'GroupId': 'sg-0e1a743c933c64c0c'}], 'SourceDestCheck': True, 'StateReason': {'Code': 'Client.UserInitiatedShutdown', 'Message': 'Client.UserInitiatedShutdown: User initiated shutdown'}, 'Tags': [{'Key': 'Name', 'Value': 'Lambda-POC'}], 'VirtualizationType': 'hvm', 'CpuOptions': {'CoreCount': 1, 'ThreadsPerCore': 2}, 'CapacityReservationSpecification': {'CapacityReservationPreference': 'open'}, 'HibernationOptions': {'Configured': False}, 'MetadataOptions': {'State': 'applied', 'HttpTokens': 'required', 'HttpPutResponseHopLimit': 2, 'HttpEndpoint': 'enabled', 'HttpProtocolIpv6': 'disabled', 'InstanceMetadataTags': 'disabled'}, 'EnclaveOptions': {'Enabled': False}, 'BootMode': 'uefi-preferred', 'PlatformDetails': 'Linux/UNIX', 'UsageOperation': 'RunInstances', 'UsageOperationUpdateTime': datetime.datetime(2024, 2, 29, 15, 37, 46, tzinfo=tzlocal()), 'PrivateDnsNameOptions': {'HostnameType': 'ip-name', 'EnableResourceNameDnsARecord': False, 'EnableResourceNameDnsAAAARecord': False}, 'MaintenanceOptions': {'AutoRecovery': 'default'}, 'CurrentInstanceBootMode': 'uefi'}], 'OwnerId': '671998034551', 'ReservationId': 'r-0e76e30e240514889'}], 'ResponseMetadata': {'RequestId': '28e606c2-af70-488d-9774-dc2cc0c7629a', 'HTTPStatusCode': 200, 'HTTPHeaders': {'x-amzn-requestid': '28e606c2-af70-488d-9774-dc2cc0c7629a', 'cache-control': 'no-cache, no-store', 'strict-transport-security': 'max-age=31536000; includeSubDomains', 'vary': 'accept-encoding', 'content-type': 'text/xml;charset=UTF-8', 'transfer-encoding': 'chunked', 'date': 'Mon, 01 Jul 2024 23:53:47 GMT', 'server': 'AmazonEC2'}, 'RetryAttempts': 0}}
+LAMBDA_WARNING: Unhandled exception. The most likely cause is an issue in the function code. However, in rare cases, a Lambda runtime update can cause unexpected function behavior. For functions using managed runtimes, runtime updates can be triggered by a function change, or can be applied automatically. To determine if the runtime has been updated, check the runtime version in the INIT_START log entry. If this error correlates with a change in the runtime version, you may be able to mitigate this error by temporarily rolling back to the previous runtime version. For more information, see https://docs.aws.amazon.com/lambda/latest/dg/runtimes-update.html
+[ERROR] TypeError: string indices must be integers, not 'str'
+Traceback (most recent call last):
+  File "/var/task/lambda_function.py", line 152, in lambda_handler
+    ec2_data.extend(fetch_ec2_backups(ec2_client))
+  File "/var/task/lambda_function.py", line 29, in fetch_ec2_backups
+    for instance in reservation['Instances']:END RequestId: 964e0cd8-56b2-422a-bd79-036156deb5a7
+REPORT RequestId: 964e0cd8-56b2-422a-bd79-036156deb5a7	Duration: 4481.20 ms	Billed Duration: 4482 ms	Memory Size: 128 MB	Max Memory Used: 98 MB	Init Duration: 330.94 ms
