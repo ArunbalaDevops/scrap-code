@@ -1,0 +1,50 @@
+def fetch_ec2_backups(client):
+    ec2_list_from_ec2console = []
+    data = []
+
+    # Get the region and account ID once
+    region = client.meta.region_name
+    account_id = boto3.client('sts').get_caller_identity()['Account']
+
+    # Get instance data
+    response = client.describe_instances()
+    for reservation in response['Reservations']:
+        for instance in reservation['Instances']:
+            # Extract instance ID and store it
+            instance_id = instance['InstanceId']
+            ec2_list_from_ec2console.append(instance_id)
+            
+            # Get the instance ARN
+            instance_arn = f"arn:aws:ec2:{region}:{account_id}:instance/{instance_id}"
+            
+            # Check for backups using AWS Backup service
+            backup_client = boto3.client('backup')
+            
+            try:
+                response = backup_client.list_backup_jobs(ByResourceArn=instance_arn)
+                latest_backup = None
+                for backup_job in response['BackupJobs']:
+                    if not latest_backup or backup_job['CompletionDate'] > latest_backup['CompletionDate']:
+                        latest_backup = backup_job
+                
+                backup_status = 'No completed backup' if not latest_backup else 'Backup Completed'
+                latest_backup_time = 'N/A' if not latest_backup else latest_backup['CompletionDate'].strftime('%Y-%m-%d %H:%M:%S')
+                backup_age = 'N/A' if not latest_backup else ('Latest' if datetime.now(datetime.UTC) - latest_backup['CompletionDate'] < timedelta(hours=24) else 'Old')
+                
+                data.append({
+                    'InstanceId': instance_id,
+                    'BackupStatus': backup_status,
+                    'LatestBackupTime': latest_backup_time,
+                    'BackupAge': backup_age
+                })
+
+            except Exception as e:
+                print(f"Error fetching backup for instance {instance_id}: {str(e)}")
+                data.append({
+                    'InstanceId': instance_id,
+                    'BackupStatus': 'Error',
+                    'LatestBackupTime': 'N/A',
+                    'BackupAge': 'N/A'
+                })
+    
+    return data
