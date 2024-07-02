@@ -1,2 +1,12 @@
-Error fetching backup for instance i-03ccad91fde1d6ffe: Parameter validation failed:
-Unknown parameter in input: "Filters", must be one of: NextToken, MaxResults, ByResourceArn, ByState, ByBackupVaultName, ByCreatedBefore, ByCreatedAfter, ByResourceType, ByAccountId, ByCompleteAfter, ByCompleteBefore, ByParentJobId, ByMessageCategory
+Test Event Name
+lamda-test
+
+Response
+{
+  "errorMessage": "Syntax error in module 'lambda_function': expected 'else' after 'if' expression (lambda_function.py, line 52)",
+  "errorType": "Runtime.UserCodeSyntaxError",
+  "requestId": "e21b0424-17f8-4b17-901c-2bbe853a09a4",
+  "stackTrace": [
+    "  File \"/var/task/lambda_function.py\" Line 52\n                    backup_age = 'N/A' if not latest_backup else ('Latest' if datetime.(timezone.utc) - latest_backup['CompletionDate'] < timedelta(hours=24) else 'Old')\n"
+  ]
+}
