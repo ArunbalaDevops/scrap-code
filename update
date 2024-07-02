@@ -1,0 +1,44 @@
+def fetch_ec2_backups(client):
+    ec2_list_from_ec2console = []
+    data = []
+
+    # Get instance data
+    response = client.describe_instances()
+    for reservation in response['Reservations']:
+        for instance in reservation['Instances']:
+            # Extract instance ID and store it
+            instance_id = instance['InstanceId']
+            ec2_list_from_ec2console.append(instance_id)
+            
+            # Check for backups using AWS Backup service
+            backup_client = boto3.client('backup')
+            filters = {'ResourceType': 'EC2', 'ResourceArn': instance_id}
+            
+            try:
+                response = backup_client.list_backup_jobs(ByResourceArn=instance_id)
+                latest_backup = None
+                for backup_job in response['BackupJobs']:
+                    if not latest_backup or backup_job['CompletionDate'] > latest_backup['CompletionDate']:
+                        latest_backup = backup_job
+                
+                backup_status = 'No completed backup' if not latest_backup else 'Backup Completed'
+                latest_backup_time = 'N/A' if not latest_backup else latest_backup['CompletionDate'].strftime('%Y-%m-%d %H:%M:%S')
+                backup_age = 'N/A' if not latest_backup else ('Latest' if datetime.now(datetime.UTC) - latest_backup['CompletionDate'] < timedelta(hours=24) else 'Old')
+                
+                data.append({
+                    'InstanceId': instance_id,
+                    'BackupStatus': backup_status,
+                    'LatestBackupTime': latest_backup_time,
+                    'BackupAge': backup_age
+                })
+
+            except Exception as e:
+                print(f"Error fetching backup for instance {instance_id}: {str(e)}")
+                data.append({
+                    'InstanceId': instance_id,
+                    'BackupStatus': 'Error',
+                    'LatestBackupTime': 'N/A',
+                    'BackupAge': 'N/A'
+                })
+    
+    return data
